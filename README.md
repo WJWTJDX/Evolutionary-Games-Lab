@@ -29,11 +29,14 @@ You will conduct a large series of experiments to evaluate what types of strateg
 - Stag Hunt
 - Battle of the Sexes
 
-> Use cardinal values for the entries in the payoff matrices (e.g., use T=5, R=3, P=2, and S=1).
+Use cardinal values for the entries in the payoff matrices 
+> (e.g., use T=5, R=3, P=2, and S=1).
 
-You will consider two types of selection and interaction dynamics: (replicator dynamics, random pairings) (imitator dynamics, lattice pairings) Use 900 agents in all of your simulations (this translates to a 30 by 30 lattice).
+You will consider two types of selection and interaction dynamics: (replicator dynamics, random pairings) (imitator dynamics, lattice pairings).
+ 
+ Use 900 agents in all of your simulations (this translates to a 30 by 30 lattice).
 
-Use agents that have a single state. In other words, use agents that remember the previous action of theother agent and then use this action to determine their next action. 
+Use agents that have a single state. In other words, *use agents that remember the previous action of the other agent and then use this action to determine their next action.*
 
 Thus, the set of all agents are:
 
