@@ -1,4 +1,5 @@
 import random
+from numpy import matrix
 
 
 STRATEGIES = ["AC", "AD", "TfT", "NTfT"]
@@ -36,3 +37,16 @@ class Agent:
         # score for most recent round
         self.score = 0
         # for battle of sexes: gender-strategy
+
+class PrisonersDilemma:
+    R = 3
+    T = 5
+    S = 1
+    P = 2
+
+    gamma = None
+
+    EXPECTED_PAYOFF_MATRIX = matrix([ [R/(1-gamma), S/(1-gamma), R/(1-gamma), S/(1-gamma)],
+                               [T/(1-gamma), P/(1-gamma), T + P*gamma/(1-gamma), S + T*gamma/(1-gamma)],
+                               [R/(1-gamma), S + P*gamma/(1-gamma), R/(1-gamma), (S + P*gamma + T*gamma**2 + R*gamma**3)/(1-gamma**4)],
+                               [T/(1-gamma), T + S*gamma/(1-gamma), (T + P*gamma + S*gamma**2 + R*gamma**3)/(1-gamma**4), (P+R*gamma)/(1-gamma**2)]] )
