@@ -1,4 +1,5 @@
 import random
+from sys import exit
 from numpy import matrix
 
 
@@ -72,8 +73,16 @@ class StagHunt:
 class Replicator:
 
     #agentProportions must be in the order of [AC, AD, TFT, NTFT, WAC, WAD, WTFT, WNTFT]
-    def __init__(self, gamma, agentProportions):
-        PrisonersDilemma.__init__(gamma)
+    def __init__(self, gamma, agentProportions, game):
+        if game == 0:
+            game = PrisonersDilemma.__init__(gamma)
+        elif game == 1:
+            game = StagHunt.__init__(gamma)
+        elif game == 2:
+            #game = BattleOfTheSexes.__init__(gamma)
+        else:
+            print("Not a valid game choice: ", game)
+            exit()
         self.proportions = agentProportions
 
     def play(self):
@@ -83,7 +92,7 @@ class Replicator:
         for i in xrange(len(self.agentProportions)):
             utilityOfI = 0
             for j in xrange(len(self.agentProportions)):
-                utilityOfI += self.agentProportions[j]*PrisonersDilemma.EXPECTED_PAYOFF_MATRIX.item(i,j)
+                utilityOfI += self.agentProportions[j]*game.EXPECTED_PAYOFF_MATRIX.item(i,j)
 
             avPayoff += utilityOfI*self.agentProportions[i];
             agentUtilities[i] = utilityOfI
