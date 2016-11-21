@@ -1,8 +1,9 @@
 import random
 from sys import exit
 from numpy import matrix
+from numpy import array
+from numpy import arange
 import matplotlib.pyplot as plt
-
 
 STRATEGIES = ["AC", "AD", "TfT", "NTfT"]
 
@@ -49,7 +50,7 @@ class StagHunt(PrisonersDilemma):
     P = 3
 
     def __init__(self, gamma):
-        super().__init__(gamma)
+        super.__init__(gamma)
 
 
 class BattleOfTheSexes:
@@ -97,7 +98,8 @@ class Replicator:
     def play(self):
         # Calculate the average payoff and utilities of each agent/Strategy
         avPayoff = 0
-        agentUtilities = []
+        agentUtilities = [0]*len(self.agentProportions)
+        utilitySum = 0
 
         for i in range(len(self.agentProportions)):
             utilityOfI = 0
@@ -106,22 +108,57 @@ class Replicator:
 
             avPayoff += utilityOfI*self.agentProportions[i]
             agentUtilities[i] = utilityOfI
+            utilitySum += utilityOfI
+        # print("Agent Utilities: ", agentUtilities)
+        # print("Average Payoff: ", avPayoff)
+
+        # Normalize the utilities to be on a 0-1 scale
+        for i in range(len(agentUtilities)):
+            agentUtilities[i] = agentUtilities[i]/utilitySum
+
+        # print("Agent Utilities: ", agentUtilities)
+        avPayoff = avPayoff/utilitySum
+        # print("Average Payoff: ", avPayoff)
 
         # Calculate the change in proportion of each agent/Strategy
-        changeInProp = []
+        changeInProp = [0]*len(self.agentProportions)
         for i in range(len(self.agentProportions)):
             changeInProp[i] = self.agentProportions[i]*(agentUtilities[i] - avPayoff)
+        # print("Change in proportions: ", changeInProp)
+
 
         # Update the proportions accordingly
         for i in range(len(self.agentProportions)):
             self.agentProportions[i] = self.agentProportions[i] + changeInProp[i]
 
+        # print("Updated Proportions: ", self.agentProportions)
+        return self.agentProportions
 
-#Set the initial proportions for the replicator dynamic
-# PrisonerGame = Replicator.__init__(gamma, [.25, .25, .25, .25], 0)
-# for i in 10000:
-#     PrisonerGame.play()
-#
-# plt.plot([1,2,3,4])
-# plt.ylabel('some numbers')
-# plt.show()
+# Set the initial proportions for the replicator dynamic
+PrisonerGame = Replicator(.99, [.25, .25, .25, .25], 0)
+iterations = 150
+AC = [PrisonerGame.agentProportions[0]]*iterations
+AD = [PrisonerGame.agentProportions[1]]*iterations
+TfT = [PrisonerGame.agentProportions[2]]*iterations
+NTfT = [PrisonerGame.agentProportions[3]]*iterations
+Time = arange(0, iterations, 1)
+for i in range(iterations - 1):
+    props = PrisonerGame.play()
+    AC[i+1] = props[0]
+    AD[i+1] = props[1]
+    TfT[i+1] = props[2]
+    NTfT[i+1] = props[3]
+ac = array(AC)
+ad = array(AD)
+tft = array(TfT)
+ntft = array(NTfT)
+#Plot the results
+plt.plot(Time, ac, label="AC")
+plt.plot(Time, ad, label="AD")
+plt.plot(Time, tft, label="TFT")
+plt.plot(Time, ntft, label="NTFT")
+plt.ylabel('Proportion of Agents')
+plt.xlabel('Time')
+plt.legend(loc=2, borderaxespad=0.)
+
+plt.show()
