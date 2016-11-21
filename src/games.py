@@ -114,9 +114,9 @@ class Replicator:
         avPayoff = 0
         agentUtilities = []
 
-        for i in xrange(len(self.agentProportions)):
+        for i in range(len(self.agentProportions)):
             utilityOfI = 0
-            for j in xrange(len(self.agentProportions)):
+            for j in range(len(self.agentProportions)):
                 utilityOfI += self.agentProportions[j]*self.game.EXPECTED_PAYOFF_MATRIX.item(i,j)
 
             avPayoff += utilityOfI*self.agentProportions[i]
@@ -124,11 +124,11 @@ class Replicator:
 
         #Calculate the change in proportion of each agent/Strategy
         changeInProp = []
-        for i in xrange(len(self.agentProportions)):
+        for i in range(len(self.agentProportions)):
             changeInProp[i] = self.agentProportions[i]*(agentUtilities[i] - avPayoff)
 
         #Update the proportions accordingly
-        for i in xrange(len(self.agentProportions)):
+        for i in range(len(self.agentProportions)):
             self.agentProportions[i] = self.agentProportions[i] + changeInProp[i]
 
 
