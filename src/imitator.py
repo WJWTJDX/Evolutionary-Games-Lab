@@ -1,19 +1,12 @@
 import argparse
-from src.games import PrisonersDilemma, StagHunt, BattleOfTheSexes
+from src.games import Games
 
 
 class Imitator:
     LATTICE_SIZE = 30
 
     def __init__(self, game, gamma, init_props=None):
-        if game == 0:
-            self.game = PrisonersDilemma(gamma)
-        elif game == 1:
-            self.game = StagHunt(gamma)
-        elif game == 2:
-            self.game = BattleOfTheSexes(gamma)
-
-        self.gamma = gamma
+        self.game = Games.get_game(game, gamma)
         self.proportions = init_props
         self.lattice = self.construct_lattice()
 
@@ -21,11 +14,26 @@ class Imitator:
 
     def run(self, iterations=100):
         for t in range(iterations):
-            # per generation
+            # get scores
             for i in range(self.LATTICE_SIZE):
                 for j in range(self.LATTICE_SIZE):
                     self.get_score(i,j)
-        self.print_scores()
+            # imitate the best of your neighbors
+            for i in range(self.LATTICE_SIZE):
+                for j in range(self.LATTICE_SIZE):
+                    agent = self.get_agent(i, j)
+                    best = self.best_neighbor(i, j)
+                    if best.score > agent.score:
+                        agent.strategy = best.strategy
+            # print results
+            print()
+            self.print_lattice()
+
+    def best_neighbor(self, i, j):
+        neighbors = self.neighbors(i,j)
+        score = lambda x: x.score
+        best = max(neighbors, key=score)
+        return best
 
     def get_score(self, i, j):
         agent = self.lattice[i][j]
@@ -40,11 +48,17 @@ class Imitator:
         return total
 
     def neighbors(self, i, j):
-        result = [self.lattice[i - 1][j - 1], self.lattice[i - 1][j], self.lattice[i - 1][(j + 1) % self.LATTICE_SIZE],
-                  self.lattice[i][j - 1], self.lattice[i][(j + 1) % self.LATTICE_SIZE],
-                  self.lattice[(i + 1) % self.LATTICE_SIZE][j - 1], self.lattice[(i + 1) % self.LATTICE_SIZE][j],
-                  self.lattice[(i + 1) % self.LATTICE_SIZE][(j + 1) % self.LATTICE_SIZE]]
+        result = [self.get_agent(i - 1, j - 1), self.get_agent(i - 1, j), self.get_agent(i - 1, j + 1),
+                  self.get_agent(i, j - 1), self.get_agent(i, j + 1),
+                  self.get_agent(i + 1, j - 1), self.get_agent(i + 1, j), self.get_agent(i + 1, j + 1)]
         return result
+    
+    def get_agent(self, i, j):
+        if i > 0:
+            i %= self.LATTICE_SIZE
+        if j > 0:
+            j %= self.LATTICE_SIZE
+        return self.lattice[i][j]
 
     def battle(self, agent1, agent2):
         score = self.game.EXPECTED_PAYOFF_MATRIX[agent1.id, agent2.id]
@@ -79,6 +93,7 @@ class Imitator:
         for i in range(self.LATTICE_SIZE):
             print([int(x.score) for x in self.lattice[i]])
 
+
 class Agent:
     ID_MAP = {"AC": 0, "AD": 1, "TfT": 2, "NTfT": 3}
 
@@ -101,9 +116,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('game', type=int, help='the game index to play')
     parser.add_argument('gamma', type=float, nargs='?', default=0.95, help='the gamma value')
-    parser.add_argument('--iterations', '--t', type=int, default=100, help='number of generations to do')
+    parser.add_argument('--iterations', '-t', type=int, default=100, help='number of generations to do')
     args = parser.parse_args()
 
     imitator = Imitator(args.game, args.gamma)
     print()
-    imitator.run(1)
+    imitator.run(args.iterations)
