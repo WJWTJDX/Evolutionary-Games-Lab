@@ -28,13 +28,13 @@ class Imitator:
             row = []
             for j in range(self.LATTICE_SIZE):
                 if i >= half > j:
-                    row.append("AC")
+                    row.append(Agent("AC"))
                 elif i >= half and j >= half:
-                    row.append("TfT")
+                    row.append(Agent("TfT"))
                 elif j >= half > i:
-                    row.append("NTfT")
+                    row.append(Agent("NTfT"))
                 else:
-                    row.append("AD")
+                    row.append(Agent("AD"))
             result.append(row)
 
         return result
@@ -43,6 +43,19 @@ class Imitator:
         for i in range(self.LATTICE_SIZE):
             print(self.lattice[i])
 
+
+class Agent:
+
+    def __init__(self, initial_strategy):
+        self.strategy = initial_strategy
+        # score for most recent round
+        self.score = 0
+
+    def __repr__(self):
+        return self.strategy
+
+    def __str__(self):
+        return self.strategy
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
