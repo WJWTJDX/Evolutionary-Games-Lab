@@ -24,7 +24,6 @@ class PrisonersDilemma:
     S = 1
     P = 2
 
-
     def __init__(self, gamma):
         self.gamma = gamma
         self.EXPECTED_PAYOFF_MATRIX = self.generate_expected_payoff()
@@ -43,28 +42,14 @@ class PrisonersDilemma:
                      [T / (1 - gamma), T + S * gamma / (1 - gamma), (T + P * gamma + S * gamma ** 2 + R * gamma ** 3) / (1 - gamma ** 4), (P + R * gamma) / (1 - gamma ** 2)]])
 
 
-class StagHunt:
+class StagHunt(PrisonersDilemma):
     R = 5
     T = 3
     S = 1
     P = 3
 
     def __init__(self, gamma):
-        self.gamma = gamma
-        self.EXPECTED_PAYOFF_MATRIX = self.generate_expected_payoff()
-
-    def generate_expected_payoff(self):
-        R = self.R
-        T = self.T
-        S = self.S
-        P = self.P
-        gamma = self.gamma
-        # Rows in order of 0:AC 1:AD 2:TFT 3:NTFT
-        # Cols in order of 0:AC 1:AD 2:TFT 3:NTFT
-        return matrix([[R/(1-gamma), S/(1-gamma), R/(1-gamma), S/(1-gamma)],
-                      [T/(1-gamma), P/(1-gamma), T + P*gamma/(1-gamma), S + T*gamma/(1-gamma)],
-                      [R/(1-gamma), S + P*gamma/(1-gamma), R/(1-gamma), (S + P*gamma + T*gamma**2 + R*gamma**3)/(1-gamma**4)],
-                       [T/(1-gamma), T + S*gamma/(1-gamma), (T + P*gamma + S*gamma**2 + R*gamma**3)/(1-gamma**4), (P+R*gamma)/(1-gamma**2)]])
+        super().__init__(gamma)
 
 
 class BattleOfTheSexes:
@@ -110,7 +95,7 @@ class Replicator:
         self.agentProportions = agentProportions
 
     def play(self):
-        #Calculate the average payoff and utilities of each agent/Strategy
+        # Calculate the average payoff and utilities of each agent/Strategy
         avPayoff = 0
         agentUtilities = []
 
@@ -122,12 +107,12 @@ class Replicator:
             avPayoff += utilityOfI*self.agentProportions[i]
             agentUtilities[i] = utilityOfI
 
-        #Calculate the change in proportion of each agent/Strategy
+        # Calculate the change in proportion of each agent/Strategy
         changeInProp = []
         for i in range(len(self.agentProportions)):
             changeInProp[i] = self.agentProportions[i]*(agentUtilities[i] - avPayoff)
 
-        #Update the proportions accordingly
+        # Update the proportions accordingly
         for i in range(len(self.agentProportions)):
             self.agentProportions[i] = self.agentProportions[i] + changeInProp[i]
 
