@@ -79,7 +79,14 @@ class BattleOfTheSexes:
     gamma = None
     #Rows in order of 0:H_AC, 1:H_AD, 2:H_TFT, 3:H_NTFT, 4:W_AC, 5:W_AD, 6:W_TFT, 7:W_NTFT
     #Cols in order of 0:H_AC, 1:H_AD, 2:H_TFT, 3:H_NTFT, 4:W_AC, 5:W_AD, 6:W_TFT, 7:W_NTFT
-    EXPECTED_PAYOFF_MATRIX = matrix()
+    EXPECTED_PAYOFF_MATRIX = matrix([ [P/(1-gamma), S/(1-gamma), P/(1-gamma), S/(1-gamma), R/(1-gamma), S/(1-gamma), R/(1-gamma), S/(1-gamma)],
+                                      [P/(1-gamma), R/(1-gamma), P + R*gamma/(1-gamma), R + P*gamma/(1-gamma), P/(1-gamma), T/(1-gamma), P + T*gamma/(1-gamma), T + P*gamma/(1-gamma)],
+                                      [P/(1-gamma), S + R*gamma/(1-gamma), P/(1-gamma), (S+R*gamma+P*gamma**2+P*gamma**3)/(1-gamma**4), R/(1-gamma), S + T*gamma/(1-gamma), R/(1-gamma), (S+T*gamma+P*gamma**2+R*gamma**3)/(1-gamma**4)],
+                                      [P/(1-gamma), R + S*gamma/(1-gamma), (P+R*gamma+S*gamma**2+P*gamma**3)/(1-gamma**4), (R+P*gamma)/(1-gamma**2), P/(1-gamma), T + S*gamma/(1-gamma), (P+T*gamma+S*gamma**2+R*gamma**3)/(1-gamma**4), (T+R*gamma)/(1-gamma**2)],
+                                      [T/(1-gamma), P/(1-gamma), T/(1-gamma), P/(1-gamma), R/(1-gamma), P/(1-gamma), R/(1-gamma), P/(1-gamma)],
+                                      [S/(1-gamma), R/(1-gamma), S + R*gamma/(1-gamma), R + S*gamma/(1-gamma), S/(1-gamma), P/(1-gamma), S + P*gamma/(1-gamma), P + S*gamma/(1-gamma)],
+                                      [T/(1-gamma), P + R*gamma/(1-gamma), T/(1-gamma), (P+R*gamma+S*gamma**2+T*gamma**3)/(1-gamma**4), R/(1-gamma), P/(1-gamma), R/(1-gamma), (P+P*gamma+S*gamma**2+R*gamma**3)/(1-gamma**4)],
+                                      [S/(1-gamma), R + P*gamma/(1-gamma), (S+R*gamma+P*gamma**2+T*gamma**3)/(1-gamma**4), (R+T*gamma)/(1-gamma**2), S/(1-gamma), P/(1-gamma), (S+P*gamma+P*gamma**2+R*gamma**3)/(1-gamma**4), (P+R*gamma)/(1-gamma**2)]])
 
     def __init__(self, gamma):
         self.gamma = gamma
