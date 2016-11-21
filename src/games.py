@@ -1,6 +1,7 @@
 import random
 from sys import exit
 from numpy import matrix
+import matplotlib.pyplot as plt
 
 
 STRATEGIES = ["AC", "AD", "TfT", "NTfT"]
@@ -17,10 +18,12 @@ class Agent:
 
 
 class PrisonersDilemma:
+
     R = 3
     T = 5
     S = 1
     P = 2
+
 
     def __init__(self, gamma):
         self.gamma = gamma
@@ -93,18 +96,18 @@ class BattleOfTheSexes:
 
 class Replicator:
 
-    # agentProportions must be in the order of [AC, AD, TFT, NTFT, WAC, WAD, WTFT, WNTFT]
+    # agentProportions must be in the order of [H_AC, H_AD, H_TFT, H_NTFT, WAC, WAD, WTFT, WNTFT]
     def __init__(self, gamma, agentProportions, game):
         if game == 0:
-            self.game = PrisonersDilemma.__init__(gamma)
+            self.game = PrisonersDilemma(gamma)
         elif game == 1:
-            self.game = StagHunt.__init__(gamma)
+            self.game = StagHunt(gamma)
         elif game == 2:
-            self.game = BattleOfTheSexes.__init__(gamma)
+            self.game = BattleOfTheSexes(gamma)
         else:
             print("Not a valid game choice: ", game)
             exit()
-        self.proportions = agentProportions
+        self.agentProportions = agentProportions
 
     def play(self):
         #Calculate the average payoff and utilities of each agent/Strategy
@@ -125,4 +128,15 @@ class Replicator:
             changeInProp[i] = self.agentProportions[i]*(agentUtilities[i] - avPayoff)
 
         #Update the proportions accordingly
-        self.agentProportions = changeInProp
+        for i in xrange(len(self.agentProportions)):
+            self.agentProportions[i] = self.agentProportions[i] + changeInProp[i]
+
+
+#Set the initial proportions for the replicator dynamic
+# PrisonerGame = Replicator.__init__(gamma, [.25, .25, .25, .25], 0)
+# for i in 10000:
+#     PrisonerGame.play()
+#
+# plt.plot([1,2,3,4])
+# plt.ylabel('some numbers')
+# plt.show()
