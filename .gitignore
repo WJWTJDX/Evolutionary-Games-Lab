@@ -1,5 +1,7 @@
-/data/quadrants.csv
+## Local Data Results
+/data/
 /src/results.csv
+
 ## Python
 __pycache__/
 *.py[cod]

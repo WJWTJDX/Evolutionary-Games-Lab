@@ -2,15 +2,19 @@ import argparse
 import csv
 from src.games import Games
 
-OUTPUT_FILE = 'results.csv'
+EXTENSION = '.csv'
+DATA_DIR = '../data/'
+
 
 class Imitator:
     LATTICE_SIZE = 30
 
-    def __init__(self, game, gamma, init_props=None):
+    def __init__(self, game, gamma, lattice_pattern="quadrants"):
         self.game = Games.get_game(game, gamma)
-        self.proportions = init_props
-        self.lattice = self.construct_lattice()
+        self.pattern = lattice_pattern
+        self.lattice = self.construct_lattice(lattice_pattern)
+
+    # == Imitation Dynamics Functions ==
 
     def run(self, iterations=100):
         result = []
@@ -33,20 +37,19 @@ class Imitator:
 
             result.append(self.lattice_array())
 
-            done = self.converged()
+            done = self.converged
             print(done, t+1)
             if done:
                 break
 
-        with open(OUTPUT_FILE, 'w') as csv_file:
+        with open(self.output_file, 'w') as csv_file:
             writer = csv.writer(csv_file)
             for row in result:
                 writer.writerow(row)
 
     def best_neighbor(self, i, j):
         neighbors = self.neighbors(i,j)
-        score = lambda x: x.score
-        best = max(neighbors, key=score)
+        best = max(neighbors, key=lambda x: x.score)
         return best
 
     def get_score(self, i, j):
@@ -78,7 +81,10 @@ class Imitator:
         score = self.game.EXPECTED_PAYOFF_MATRIX[agent1.id, agent2.id]
         return score
 
+    # == Properties ==
+
     # returns true if all of the agents are of the same type
+    @property
     def converged(self):
         first = self.get_agent(0, 0).strategy
         for i in range(self.LATTICE_SIZE):
@@ -88,27 +94,35 @@ class Imitator:
                     return False
         return True
 
+    @property
+    def output_file(self):
+        path = DATA_DIR + self.game.abbreviation + '_' + self.pattern_abbreviation(self.pattern) + EXTENSION
+        print(path)
+        return path
 
-    # Lattice Functions
-    def construct_lattice(self):
-        # for now, just default to quadrants
-        half = self.LATTICE_SIZE / 2
+    # == Lattice Functions ==
 
+    def construct_lattice(self, lattice_pattern):
+        pattern = self.pattern_abbreviation(lattice_pattern)
         result = []
-        for i in range(self.LATTICE_SIZE):
-            row = []
-            for j in range(self.LATTICE_SIZE):
-                if i >= half > j:
-                    row.append(Agent("AC"))
-                elif i >= half and j >= half:
-                    row.append(Agent("TfT"))
-                elif j >= half > i:
-                    row.append(Agent("NTfT"))
-                else:
-                    row.append(Agent("AD"))
-            result.append(row)
+        if pattern == "quads":
+            # for now, just default to quadrants
+            half = self.LATTICE_SIZE / 2
 
-        return result
+            for i in range(self.LATTICE_SIZE):
+                row = []
+                for j in range(self.LATTICE_SIZE):
+                    if i >= half > j:
+                        row.append(Agent("AC"))
+                    elif i >= half and j >= half:
+                        row.append(Agent("TfT"))
+                    elif j >= half > i:
+                        row.append(Agent("NTfT"))
+                    else:
+                        row.append(Agent("AD"))
+                result.append(row)
+
+            return result
 
     def print_lattice(self):
         l = []
@@ -127,9 +141,13 @@ class Imitator:
                 l.append(self.lattice[i][j].strategy)
         return l
 
-    def print_scores(self):
-        for i in range(self.LATTICE_SIZE):
-            print([int(x.score) for x in self.lattice[i]])
+    # == Helper Methods ==
+
+    @staticmethod
+    def pattern_abbreviation(pattern):
+        abrs = {"quadrants": "quads", "quads": "quads", "invasion": "inv", "inv": "inv"}
+        pattern = pattern.lower()
+        return abrs[pattern]
 
 
 class Agent:
