@@ -109,11 +109,15 @@ if __name__ == '__main__':
             WTFT[i+1] = props[6]
             WNTFT[i+1] = props[7]
         ac = array(HAC)
+        # print ac
         ad = array(HAD)
+        # print ad
         tft = array(HTfT)
         ntft = array(HNTfT)
         wac = array(WAC)
+        # print wac
         wad = array(WAD)
+        # print wad
         wtft = array(WTFT)
         wntft = array(WNTFT)
         # Plot the results
@@ -121,12 +125,14 @@ if __name__ == '__main__':
         plt.plot(Time, ad, label="H_AD")
         plt.plot(Time, tft, label="H_TFT")
         plt.plot(Time, ntft, label="H_NTFT")
-        plt.plot(Time, wac, label="W_AC")
-        plt.plot(Time, wad, label="W_AD")
-        plt.plot(Time, wtft, label="W_TFT")
-        plt.plot(Time, wntft, label="W_NTFT")
+        plt.plot(Time, wac, label="W_AC", linestyle="--")
+        plt.plot(Time, wad, label="W_AD", linestyle="--")
+        plt.plot(Time, wtft, label="W_TFT", linestyle="--")
+        plt.plot(Time, wntft, label="W_NTFT", linestyle="--")
     plt.ylabel('Proportion of Agents')
     plt.xlabel('Time')
+    axes = plt.gca()
+    axes.set_ylim([0, 1])
     plt.legend(loc=0, borderaxespad=0.)
 
     plt.show()
