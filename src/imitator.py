@@ -18,6 +18,7 @@ class Imitator:
         result = []
         cols = range(self.LATTICE_SIZE * self.LATTICE_SIZE)
         result.append(cols)
+        result.append(self.lattice_array())
 
         for t in range(iterations):
             # get scores
