@@ -1,6 +1,8 @@
 import argparse
+import csv
 from src.games import Games
 
+OUTPUT_FILE = 'results.csv'
 
 class Imitator:
     LATTICE_SIZE = 30
@@ -10,9 +12,13 @@ class Imitator:
         self.proportions = init_props
         self.lattice = self.construct_lattice()
 
-        self.print_lattice()
+        # self.print_lattice()
 
     def run(self, iterations=100):
+        result = []
+        cols = range(self.LATTICE_SIZE * self.LATTICE_SIZE)
+        result.append(cols)
+
         for t in range(iterations):
             # get scores
             for i in range(self.LATTICE_SIZE):
@@ -25,9 +31,13 @@ class Imitator:
                     best = self.best_neighbor(i, j)
                     if best.score > agent.score:
                         agent.strategy = best.strategy
-            # print results
-            print()
-            self.print_lattice()
+
+            result.append(self.lattice_array())
+
+        with open(OUTPUT_FILE, 'w') as csv_file:
+            writer = csv.writer(csv_file)
+            for row in result:
+                writer.writerow(row)
 
     def best_neighbor(self, i, j):
         neighbors = self.neighbors(i,j)
@@ -86,8 +96,21 @@ class Imitator:
         return result
 
     def print_lattice(self):
+        l = []
         for i in range(self.LATTICE_SIZE):
-            print(self.lattice[i])
+            l.extend(self.lattice[i])
+
+        for j in l:
+            print(j, ",", end="")
+
+        print()
+
+    def lattice_array(self):
+        l = []
+        for i in range(self.LATTICE_SIZE):
+            for j in range(self.LATTICE_SIZE):
+                l.append(self.lattice[i][j].strategy)
+        return l
 
     def print_scores(self):
         for i in range(self.LATTICE_SIZE):
@@ -120,5 +143,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     imitator = Imitator(args.game, args.gamma)
-    print()
     imitator.run(args.iterations)
