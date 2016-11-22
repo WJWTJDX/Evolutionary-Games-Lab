@@ -26,6 +26,8 @@ class PrisonersDilemma:
     P = 2
 
     def __init__(self, gamma):
+        self.abbreviation = "PD"
+        self.name = "Prisoners Dilemma"
         self.gamma = gamma
         self.EXPECTED_PAYOFF_MATRIX = self.generate_expected_payoff()
 
@@ -50,6 +52,8 @@ class StagHunt:
     P = 3
 
     def __init__(self, gamma):
+        self.abbreviation = "SH"
+        self.name = "Stag Hunt"
         self.gamma = gamma
         self.EXPECTED_PAYOFF_MATRIX = self.generate_expected_payoff()
 
@@ -77,6 +81,8 @@ class BattleOfTheSexes:
     P = 2
 
     def __init__(self, gamma):
+        self.abbreviation = "BOTS"
+        self.name = "Battle of the Sexes"
         self.gamma = gamma
         self.EXPECTED_PAYOFF_MATRIX = self.generate_expected_payoff()
 
