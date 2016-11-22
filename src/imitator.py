@@ -12,8 +12,6 @@ class Imitator:
         self.proportions = init_props
         self.lattice = self.construct_lattice()
 
-        # self.print_lattice()
-
     def run(self, iterations=100):
         result = []
         cols = range(self.LATTICE_SIZE * self.LATTICE_SIZE)
@@ -34,6 +32,11 @@ class Imitator:
                         agent.strategy = best.strategy
 
             result.append(self.lattice_array())
+
+            done = self.converged()
+            print(done, t+1)
+            if done:
+                break
 
         with open(OUTPUT_FILE, 'w') as csv_file:
             writer = csv.writer(csv_file)
@@ -74,6 +77,17 @@ class Imitator:
     def battle(self, agent1, agent2):
         score = self.game.EXPECTED_PAYOFF_MATRIX[agent1.id, agent2.id]
         return score
+
+    # returns true if all of the agents are of the same type
+    def converged(self):
+        first = self.get_agent(0, 0).strategy
+        for i in range(self.LATTICE_SIZE):
+            for j in range(self.LATTICE_SIZE):
+                current = self.get_agent(i, j).strategy
+                if current != first:
+                    return False
+        return True
+
 
     # Lattice Functions
     def construct_lattice(self):
