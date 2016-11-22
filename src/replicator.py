@@ -1,5 +1,5 @@
 import argparse
-from src.games import Games
+from games import Games
 import matplotlib.pyplot as plt
 from numpy import array
 from numpy import arange
@@ -68,28 +68,71 @@ if __name__ == '__main__':
     # Set the initial proportions for the replicator dynamic
     game = Replicator(args.game, args.gamma, args.initial_proportions)
     iterations = args.iterations
-    AC = [game.agentProportions[0]] * iterations
-    AD = [game.agentProportions[1]] * iterations
-    TfT = [game.agentProportions[2]] * iterations
-    NTfT = [game.agentProportions[3]] * iterations
     Time = arange(0, iterations, 1)
-    for i in range(iterations - 1):
-        props = game.play()
-        AC[i + 1] = props[0]
-        AD[i + 1] = props[1]
-        TfT[i + 1] = props[2]
-        NTfT[i + 1] = props[3]
-    ac = array(AC)
-    ad = array(AD)
-    tft = array(TfT)
-    ntft = array(NTfT)
-    # Plot the results
-    plt.plot(Time, ac, label="AC")
-    plt.plot(Time, ad, label="AD")
-    plt.plot(Time, tft, label="TFT")
-    plt.plot(Time, ntft, label="NTFT")
+    if len(args.initial_proportions) == 4:
+        AC = [game.agentProportions[0]] * iterations
+        AD = [game.agentProportions[1]] * iterations
+        TfT = [game.agentProportions[2]] * iterations
+        NTfT = [game.agentProportions[3]] * iterations
+        for i in range(iterations - 1):
+            props = game.play()
+            AC[i + 1] = props[0]
+            AD[i + 1] = props[1]
+            TfT[i + 1] = props[2]
+            NTfT[i + 1] = props[3]
+        ac = array(AC)
+        ad = array(AD)
+        tft = array(TfT)
+        ntft = array(NTfT)
+        # Plot the results
+        plt.plot(Time, ac, label="AC")
+        plt.plot(Time, ad, label="AD")
+        plt.plot(Time, tft, label="TFT")
+        plt.plot(Time, ntft, label="NTFT")
+    else:
+        HAC = [game.agentProportions[0]] * iterations
+        HAD = [game.agentProportions[1]] * iterations
+        HTfT = [game.agentProportions[2]] * iterations
+        HNTfT = [game.agentProportions[3]] * iterations
+        WAC = [game.agentProportions[4]] * iterations
+        WAD = [game.agentProportions[5]] * iterations
+        WTFT = [game.agentProportions[6]] * iterations
+        WNTFT = [game.agentProportions[7]] * iterations
+        for i in range(iterations - 1):
+            props = game.play()
+            HAC[i + 1] = props[0]
+            HAD[i + 1] = props[1]
+            HTfT[i + 1] = props[2]
+            HNTfT[i + 1] = props[3]
+            WAC[i+1] = props[4]
+            WAD[i+1] = props[5]
+            WTFT[i+1] = props[6]
+            WNTFT[i+1] = props[7]
+        ac = array(HAC)
+        # print ac
+        ad = array(HAD)
+        # print ad
+        tft = array(HTfT)
+        ntft = array(HNTfT)
+        wac = array(WAC)
+        # print wac
+        wad = array(WAD)
+        # print wad
+        wtft = array(WTFT)
+        wntft = array(WNTFT)
+        # Plot the results
+        plt.plot(Time, ac, label="H_AC")
+        plt.plot(Time, ad, label="H_AD")
+        plt.plot(Time, tft, label="H_TFT")
+        plt.plot(Time, ntft, label="H_NTFT")
+        plt.plot(Time, wac, label="W_AC", linestyle="--")
+        plt.plot(Time, wad, label="W_AD", linestyle="--")
+        plt.plot(Time, wtft, label="W_TFT", linestyle="--")
+        plt.plot(Time, wntft, label="W_NTFT", linestyle="--")
     plt.ylabel('Proportion of Agents')
     plt.xlabel('Time')
-    plt.legend(loc=2, borderaxespad=0.)
+    axes = plt.gca()
+    axes.set_ylim([0, 1])
+    plt.legend(loc=0, borderaxespad=0.)
 
     plt.show()
