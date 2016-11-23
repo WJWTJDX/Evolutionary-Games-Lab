@@ -134,8 +134,20 @@ class Imitator:
     def invasion_pattern(self, defender):
         others = self.game.STRATEGIES[:]
         others.remove(defender)
-        print(self.game.STRATEGIES, defender, others)
-        return self.quad_pattern()
+        result = []
+        for i in range(self.LATTICE_SIZE):
+            row = []
+            for j in range(self.LATTICE_SIZE):
+                if 6 <= i <= 11 and 12 <= j <= 17:
+                    row.append(Agent(others[0]))
+                elif 18 <= i <= 23 and 12 <= j <= 17:
+                    row.append(Agent(others[1]))
+                elif 12 <= i <= 17 and 18 <= j <= 23:
+                    row.append(Agent(others[2]))
+                else:
+                    row.append(Agent(defender))
+            result.append(row)
+        return result
 
     def lattice_array(self):
         l = []
