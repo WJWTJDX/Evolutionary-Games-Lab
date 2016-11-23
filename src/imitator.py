@@ -111,7 +111,8 @@ class Imitator:
             result = self.quad_pattern()
         elif pattern == "inv":
             result = self.invasion_pattern("AC")
-
+        elif pattern == "tri":
+            result = self.triangles_pattern()
         return result
 
     def quad_pattern(self):
@@ -149,6 +150,35 @@ class Imitator:
             result.append(row)
         return result
 
+    def triangles_pattern(self):
+        result = []
+        half = self.LATTICE_SIZE / 2
+        for i in range(self.LATTICE_SIZE):
+            row = []
+            for j in range(self.LATTICE_SIZE):
+                if i >= half > j:
+                    if i + j >= self.LATTICE_SIZE:
+                        row.append(Agent("H_AC"))
+                    else:
+                        row.append(Agent("W_AC"))
+                elif i >= half and j >= half:
+                    if i + j >= half*3:
+                        row.append(Agent("H_TfT"))
+                    else:
+                        row.append(Agent("W_TfT"))
+                elif j >= half > i:
+                    if i + j >= self.LATTICE_SIZE:
+                        row.append(Agent("H_NTfT"))
+                    else:
+                        row.append(Agent("W_NTfT"))
+                else:
+                    if i + j >= half:
+                        row.append(Agent("H_AD"))
+                    else:
+                        row.append(Agent("W_AD"))
+            result.append(row)
+        return result
+
     def lattice_array(self):
         l = []
         for i in range(self.LATTICE_SIZE):
@@ -156,17 +186,26 @@ class Imitator:
                 l.append(self.lattice[i][j].strategy)
         return l
 
+    def print_lattice(self, grid=None):
+        if grid is None:
+            grid = self.lattice
+        for row in grid:
+            print(row)
+
     # == Helper Methods ==
 
     @staticmethod
     def pattern_abbreviation(pattern):
-        abbreviations = {"quadrants": "quads", "quad": "quads", "quads": "quads", "invasion": "inv", "inv": "inv"}
+        abbreviations = {"quadrants": "quads", "quad": "quads", "quads": "quads",
+                         "invasion": "inv", "inv": "inv",
+                         "triangles": "tri", "tri": "tri", "triangle": "tri"}
         pattern = pattern.lower()
         return abbreviations[pattern]
 
 
 class Agent:
-    ID_MAP = {"AC": 0, "AD": 1, "TfT": 2, "NTfT": 3}
+    ID_MAP = {"AC": 0, "AD": 1, "TfT": 2, "NTfT": 3,
+              "H_AC": 0, "H_AD": 1, "H_TfT": 2, "H_NTfT": 3, "W_AC": 4, "W_AD": 5, "W_TfT": 6, "W_NTfT": 7}
 
     def __init__(self, initial_strategy):
         self.strategy = initial_strategy

@@ -65,7 +65,7 @@ class BattleOfTheSexes:
     T = 5
     S = 1
     P = 2
-    STRATEGIES = ["H_AC", "H_AD", "H_TfT", "H_NTfT", "WAC", "WAD", "WTfT", "WNTfT"]
+    STRATEGIES = ["H_AC", "H_AD", "H_TfT", "H_NTfT", "W_AC", "W_AD", "W_TfT", "W_NTfT"]
 
     def __init__(self, gamma):
         self.abbreviation = "BOTS"
