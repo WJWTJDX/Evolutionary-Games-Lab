@@ -1,20 +1,29 @@
 <html>
 	<head>
 		<style>
+      .H_TfT,
 			.TfT { fill: #0A8BB2; background: #0A8BB2;}
+      .H_AC,
 			.AC { fill: #1AC18B; background: #1AC18B;}
+      .H_AD,
 			.AD { fill: #E40E0E; background: #E40E0E;}
+      .H_NTfT,
       .NTfT { fill: #0e46e1; background: #0e46e1;}
 
-      .circle {
-      width: 16px;
-      height: 16px;
-      -webkit-border-radius: 8px;
-      -moz-border-radius: 8px;
-      border-radius: 8px;
-      float: left;
+      .W_TfT { fill: darksalmon; background: darksalmon;}
+      .W_AC { fill: lightpink; background: lightpink;}
+      .W_AD { fill: crimson; background: crimson;}
+      .W_NTfT { fill: fuchsia; background: fuchsia;}
 
-    }
+      .circle {
+        width: 16px;
+        height: 16px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        float: left;
+
+      }
 
     div.game-title {
       font-size: x-large;
@@ -35,10 +44,15 @@
     svg {
       margin: 8px;
     }
+
+    .hidden-legend {
+      display: none;
+    }
 		</style>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <script src="//d3js.org/d3.v4.0.0-alpha.28.min.js" charset="utf-8"></script>
 		<script src="d3-iconarray.min.js"></script>
 	</head>
@@ -49,27 +63,73 @@
       </div>
       <div class="col-sm-5">
         <div class="game-title">Game:<span id="game">Prisoner's Dilemma</span></div>
-        <div>
-          <div class="circle AC"></div>
-          <span>Always Cooperate</span>
-          <span class="count" id="count-AC"></span>
+        <div id="norm-legend">
+          <div>
+            <div class="circle AC"></div>
+            <span>Always Cooperate</span>
+            <span class="count" id="count-AC"></span>
+          </div>
+          <div>
+            <div class="circle AD"></div>
+            <span>Always Defect</span>
+            <span class="count" id="count-AD"></span>
+          </div>
+          <div>
+            <div class="circle TfT"></div>
+            <span>Tit-for-Tat</span>
+            <span class="count" id="count-TfT"></span>
+          </div>
+          <div>
+            <div class="circle NTfT"></div>
+            <span>Not Tit-for-Tat</span>
+            <span class="count" id="count-NTfT"></span>
+          </div>
         </div>
-        <div>
-          <div class="circle AD"></div>
-          <span>Always Defect</span>
-          <span class="count" id="count-AD"></span>
+
+
+        <div class="hidden-legend" id="bots-legend">
+          <div >
+            <div class="circle H_AC"></div>
+            <span>Always Cooperate (H)</span>
+            <span class="count" id="count-H_AC"></span>
+          </div>
+          <div>
+            <div class="circle H_AD"></div>
+            <span>Always Defect (H)</span>
+            <span class="count" id="count-H_AD"></span>
+          </div>
+          <div>
+            <div class="circle H_TfT"></div>
+            <span>Tit-for-Tat (H)</span>
+            <span class="count" id="count-H_TfT"></span>
+          </div>
+          <div>
+            <div class="circle H_NTfT"></div>
+            <span>Not Tit-for-Tat (H)</span>
+            <span class="count" id="count-H_NTfT"></span>
+          </div>
+          <div >
+            <div class="circle W_AC"></div>
+            <span>Always Cooperate (W)</span>
+            <span class="count" id="count-W_AC"></span>
+          </div>
+          <div>
+            <div class="circle W_AD"></div>
+            <span>Always Defect (W)</span>
+            <span class="count" id="count-W_AD"></span>
+          </div>
+          <div>
+            <div class="circle W_TfT"></div>
+            <span>Tit-for-Tat (W)</span>
+            <span class="count" id="count-W_TfT"></span>
+          </div>
+          <div>
+            <div class="circle W_NTfT"></div>
+            <span>Not Tit-for-Tat (W)</span>
+            <span class="count" id="count-W_NTfT"></span>
+          </div>
         </div>
-        <div>
-          <div class="circle TfT"></div>
-          <span>Tit-for-Tat</span>
-          <span class="count" id="count-TfT"></span>
-        </div>
-        <div>
-          <div class="circle NTfT"></div>
-          <span>Not Tit-for-Tat</span>
-          <span class="count" id="count-NTfT"></span>
-        </div>
-        <div>
+
           <button id="btn-prev" type="button" class="btn btn-default btn-sm" onclick="prev()">
           	<span class="glyphicon glyphicon-chevron-left"></span> Previous
         	</button>
@@ -79,13 +139,22 @@
         </div>
         <br>
         <div>Generation: <span id="gen"></span></div>
-        <br>
-        <div class="dropdown">
-          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select Graph
+
+        <div class="btn-group dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select Simulation
           <span class="caret"></span></button>
           <ul class="dropdown-menu">
             <li><a onclick="chooseData('PD_quads.csv', 'Prisoner\'s Dillema')">Quadrants (PD)</a></li>
-            <li><a onclick="chooseData('PD_inv_AC.csv', 'Prisoner\'s Dillema')">Invasion on AC (PD)</a></li>
+            <li><a onclick="chooseData('SH_quads.csv', 'Stag Hunt')">Cooperation (SH)</a></li>
+            <li><a onclick="chooseData('PD_rand.csv', 'Prisoner\'s Dillema')">Random (PD)</a></li>
+            <li><a onclick="chooseData('PD_inv_AC.csv', 'Prisoner\'s Dillema')">Invasion - AC (PD)</a></li>
+            <li><a onclick="chooseData('PD_inv_AD.csv', 'Prisoner\'s Dillema')">Invasion - AD (PD)</a></li>
+            <li><a onclick="chooseData('PD_inv_TfT.csv', 'Prisoner\'s Dillema')">Invasion - TfT (PD)</a></li>
+            <li><a onclick="chooseData('SH_inv_AD.csv', 'Stag Hunt')">Cooperation Invasion (SH)</a></li>
+            <li><a onclick="chooseData('BOTS_tri.csv', 'Battle of the Sexes')">Triangles (BOTS)</a></li>
+            <li><a onclick="chooseData('BOTS_rand.csv', 'Battle of the Sexes')">Random (BOTS)</a></li>
+            <li><a onclick="chooseData('BOTS_alt.csv', 'Battle of the Sexes')">Fishing (BOTS)</a></li>
+            <li><a onclick="chooseData('BOTS_alt3.csv', 'Battle of the Sexes')">Nash Equilibrium (BOTS)</a></li>
           </ul>
       </div>
       </div>
@@ -136,12 +205,13 @@
           .gapInterval(gapInterval);
 
        function chooseData(file, gameName) {
+         T = 0;
          d3.csv(file, map_row, plotPoints);
-         updateGameName(gameName)
+         updateGameName(gameName);
        }
 
-
-       d3.csv('PD_quads.csv', map_row, plotPoints);
+       // Start Out
+       chooseData('PD_quads.csv', "Prisoner's Dilemma")
 
        function plotPoints(data) {
          // clear old points out first
@@ -175,7 +245,15 @@
        }
 
        function updateGameName(name) {
-         d3.select("#game").text(name)
+         d3.select("#game").text(name);
+         if (name === "Battle of the Sexes") {
+           d3.select("#norm-legend").classed("hidden-legend", true);
+           d3.select("#bots-legend").classed("hidden-legend", false);
+         }
+         else {
+           d3.select("#norm-legend").classed("hidden-legend", false);
+           d3.select("#bots-legend").classed("hidden-legend", true);
+         }
        }
 
        function updateGUI() {
@@ -197,6 +275,15 @@
          d3.select("#count-AD").text(ad);
          d3.select("#count-TfT").text(tft);
          d3.select("#count-NTfT").text(ntft);
+
+         d3.select("#count-H_AC").text(d3.selectAll("g.H_AC").data().length);
+         d3.select("#count-H_AD").text(d3.selectAll("g.H_AD").data().length);
+         d3.select("#count-H_TfT").text(d3.selectAll("g.H_TfT").data().length);
+         d3.select("#count-H_NTfT").text(d3.selectAll("g.H_NTfT").data().length);
+         d3.select("#count-W_AC").text(d3.selectAll("g.W_AC").data().length);
+         d3.select("#count-W_AD").text(d3.selectAll("g.W_AD").data().length);
+         d3.select("#count-W_TfT").text(d3.selectAll("g.W_TfT").data().length);
+         d3.select("#count-W_NTfT").text(d3.selectAll("g.W_NTfT").data().length);
        }
 
        function updateButtons() {
