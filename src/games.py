@@ -66,9 +66,9 @@ class BattleOfTheSexes:
     S = 1
     P = 2
     STRATEGIES = ["H_AC", "H_AD", "H_TfT", "H_NTfT", "W_AC", "W_AD", "W_TfT", "W_NTfT"]
+    abbreviation = "BOTS"
 
     def __init__(self, gamma):
-        self.abbreviation = "BOTS"
         self.name = "Battle of the Sexes"
         self.gamma = gamma
         self.EXPECTED_PAYOFF_MATRIX = self.generate_expected_payoff()
@@ -91,6 +91,11 @@ class BattleOfTheSexes:
                         [S/(1-gamma), R + P*gamma/(1-gamma), (S+R*gamma+P*gamma**2+T*gamma**3)/(1-gamma**4), (R+T*gamma)/(1-gamma**2), S/(1-gamma), P/(1-gamma), (S+P*gamma+P*gamma**2+R*gamma**3)/(1-gamma**4), (P+R*gamma)/(1-gamma**2)]])
 
 
+class BattleOfTheSexes2(BattleOfTheSexes):
+    STRATEGIES = ["H_AC", "H_TfT", "H_NTfT", "W_AD", "W_TfT", "W_NTfT"]
+    abbreviation = "BOTS2"
+
+
 class Games:
 
     @staticmethod
@@ -101,6 +106,8 @@ class Games:
             return StagHunt(gamma)
         elif game == 2:
             return BattleOfTheSexes(gamma)
+        elif game == 3:
+            return BattleOfTheSexes2(gamma)
         else:
             print("Not a valid game choice: ", game)
             exit()

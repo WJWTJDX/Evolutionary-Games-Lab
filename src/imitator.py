@@ -1,5 +1,6 @@
 import argparse
 import csv
+import random
 from src.games import Games
 
 EXTENSION = '.csv'
@@ -113,6 +114,10 @@ class Imitator:
             result = self.invasion_pattern("AC")
         elif pattern == "tri":
             result = self.triangles_pattern()
+        elif pattern == "alt":
+            result = self.alternate_pattern(4)
+        elif pattern == "rand":
+            result = self.random_pattern()
         return result
 
     def quad_pattern(self):
@@ -179,6 +184,38 @@ class Imitator:
             result.append(row)
         return result
 
+    def alternate_pattern(self, size=3):
+        result = []
+        strats = self.game.STRATEGIES[:]
+        t = 0
+        rt = 0
+        for i in range(self.LATTICE_SIZE):
+            row = []
+            rs = 0
+            s = 0
+            for j in range(self.LATTICE_SIZE):
+                row.append(Agent(strats[(s+t) % len(strats)]))
+                if rs % size == 0:
+                    s += 1
+                rs += 1
+            result.append(row)
+            if rt % size == 0:
+                t += 1
+            rt += 1
+        self.print_lattice(result)
+        return result
+
+    def random_pattern(self):
+        result = []
+        strats = self.game.STRATEGIES[:]
+        for i in range(self.LATTICE_SIZE):
+            row = []
+            for j in range(self.LATTICE_SIZE):
+                row.append(Agent(random.choice(strats)))
+            result.append(row)
+        self.print_lattice(result)
+        return result
+
     def lattice_array(self):
         l = []
         for i in range(self.LATTICE_SIZE):
@@ -198,7 +235,9 @@ class Imitator:
     def pattern_abbreviation(pattern):
         abbreviations = {"quadrants": "quads", "quad": "quads", "quads": "quads",
                          "invasion": "inv", "inv": "inv",
-                         "triangles": "tri", "tri": "tri", "triangle": "tri"}
+                         "triangles": "tri", "tri": "tri", "triangle": "tri",
+                         "random": "rand", "rand": "rand",
+                         "alternate": "alt", "alt": "alt", "alternating": "alt"}
         pattern = pattern.lower()
         return abbreviations[pattern]
 
