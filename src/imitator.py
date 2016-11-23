@@ -17,6 +17,8 @@ class Imitator:
     # == Imitation Dynamics Functions ==
 
     def run(self, iterations=100):
+        print(self.game.name, "--" + self.pattern)
+
         result = []
         cols = range(self.LATTICE_SIZE * self.LATTICE_SIZE)
         result.append(cols)
@@ -106,33 +108,26 @@ class Imitator:
         pattern = self.pattern_abbreviation(lattice_pattern)
         result = []
         if pattern == "quads":
-            # for now, just default to quadrants
-            half = self.LATTICE_SIZE / 2
+            result = self.quad_pattern()
 
-            for i in range(self.LATTICE_SIZE):
-                row = []
-                for j in range(self.LATTICE_SIZE):
-                    if i >= half > j:
-                        row.append(Agent("AC"))
-                    elif i >= half and j >= half:
-                        row.append(Agent("TfT"))
-                    elif j >= half > i:
-                        row.append(Agent("NTfT"))
-                    else:
-                        row.append(Agent("AD"))
-                result.append(row)
+        return result
 
-            return result
-
-    def print_lattice(self):
-        l = []
+    def quad_pattern(self):
+        result = []
+        half = self.LATTICE_SIZE / 2
         for i in range(self.LATTICE_SIZE):
-            l.extend(self.lattice[i])
-
-        for j in l:
-            print(j, ",", end="")
-
-        print()
+            row = []
+            for j in range(self.LATTICE_SIZE):
+                if i >= half > j:
+                    row.append(Agent("AC"))
+                elif i >= half and j >= half:
+                    row.append(Agent("TfT"))
+                elif j >= half > i:
+                    row.append(Agent("NTfT"))
+                else:
+                    row.append(Agent("AD"))
+            result.append(row)
+        return result
 
     def lattice_array(self):
         l = []
