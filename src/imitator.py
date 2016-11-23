@@ -109,6 +109,8 @@ class Imitator:
         result = []
         if pattern == "quads":
             result = self.quad_pattern()
+        elif pattern == "inv":
+            result = self.invasion_pattern("AC")
 
         return result
 
@@ -129,6 +131,12 @@ class Imitator:
             result.append(row)
         return result
 
+    def invasion_pattern(self, defender):
+        others = self.game.STRATEGIES[:]
+        others.remove(defender)
+        print(self.game.STRATEGIES, defender, others)
+        return self.quad_pattern()
+
     def lattice_array(self):
         l = []
         for i in range(self.LATTICE_SIZE):
@@ -140,9 +148,9 @@ class Imitator:
 
     @staticmethod
     def pattern_abbreviation(pattern):
-        abrs = {"quadrants": "quads", "quads": "quads", "invasion": "inv", "inv": "inv"}
+        abbreviations = {"quadrants": "quads", "quad": "quads", "quads": "quads", "invasion": "inv", "inv": "inv"}
         pattern = pattern.lower()
-        return abrs[pattern]
+        return abbreviations[pattern]
 
 
 class Agent:
@@ -168,7 +176,8 @@ if __name__ == '__main__':
     parser.add_argument('game', type=int, help='the game index to play')
     parser.add_argument('gamma', type=float, nargs='?', default=0.95, help='the gamma value')
     parser.add_argument('--iterations', '-t', type=int, default=100, help='number of generations to do')
+    parser.add_argument('--pattern', '-lp', default="quads", help='the lattice pattern to use')
     args = parser.parse_args()
 
-    imitator = Imitator(args.game, args.gamma)
+    imitator = Imitator(args.game, args.gamma, lattice_pattern=args.pattern)
     imitator.run(args.iterations)
