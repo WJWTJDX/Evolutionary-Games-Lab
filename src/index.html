@@ -1,0 +1,231 @@
+<html>
+	<head>
+		<style>
+			.TfT { fill: #0A8BB2; background: #0A8BB2;}
+			.AC { fill: #1AC18B; background: #1AC18B;}
+			.AD { fill: #E40E0E; background: #E40E0E;}
+      .NTfT { fill: #0e46e1; background: #0e46e1;}
+
+      .circle {
+      width: 16px;
+      height: 16px;
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+      float: left;
+
+    }
+
+    div.game-title {
+      font-size: x-large;
+      margin-bottom: 10px;
+    }
+
+    span {
+      margin-left: 8px;
+      font-weight: bold;
+    }
+
+    span.count {
+      font-weight: normal;
+      float: right;
+      margin-right: 150px;
+    }
+
+    svg {
+      margin: 8px;
+    }
+		</style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="//d3js.org/d3.v4.0.0-alpha.28.min.js" charset="utf-8"></script>
+		<script src="d3-iconarray.min.js"></script>
+	</head>
+	<body>
+    <div class="row">
+      <div class="col-sm-7">
+        <svg id="svg"></svg>
+      </div>
+      <div class="col-sm-5">
+        <div class="game-title">Game:<span id="game">Prisoner's Dilemma</span></div>
+        <div>
+          <div class="circle AC"></div>
+          <span>Always Cooperate</span>
+          <span class="count" id="count-AC"></span>
+        </div>
+        <div>
+          <div class="circle AD"></div>
+          <span>Always Defect</span>
+          <span class="count" id="count-AD"></span>
+        </div>
+        <div>
+          <div class="circle TfT"></div>
+          <span>Tit-for-Tat</span>
+          <span class="count" id="count-TfT"></span>
+        </div>
+        <div>
+          <div class="circle NTfT"></div>
+          <span>Not Tit-for-Tat</span>
+          <span class="count" id="count-NTfT"></span>
+        </div>
+        <div>
+          <button id="btn-prev" type="button" class="btn btn-default btn-sm" onclick="prev()">
+          	<span class="glyphicon glyphicon-chevron-left"></span> Previous
+        	</button>
+          <button id="btn-next" type="button" class="btn btn-default btn-sm" onclick="next()">
+          	<span class="glyphicon glyphicon-chevron-right"></span> Next
+        	</button>
+        </div>
+        <br>
+        <div>Generation: <span id="gen"></span></div>
+        <br>
+        <div class="dropdown">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select Graph
+          <span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li><a onclick="chooseData('PD_quads.csv', 'Prisoner\'s Dillema')">Quadrants (PD)</a></li>
+            <li><a onclick="chooseData('PD_inv_AC.csv', 'Prisoner\'s Dillema')">Invasion on AC (PD)</a></li>
+          </ul>
+      </div>
+      </div>
+    </div>
+		 <script>
+       var width = 500,
+           height = 500,
+           rows = 30,
+           columns = 30,
+           iconWidth = 12,
+           gapSize = 0.3,
+           gapInterval = 6;
+
+       var T = 0;
+       var DATA;
+
+			 var layout = d3_iconarray.layout()
+			 	.widthFirst(false)
+				.height(rows);
+
+       var map_row = (d, i) => {
+         return {
+           "t": i,
+           data: Object.keys(d).map(key => {return {"class": d[key]}})
+         }
+       }
+
+       var svg = d3.select("#svg")
+          .attr("width", width)
+          .attr("height", height);
+
+       function appendCircles(selection) {
+            selection.append("circle")
+                .attr("cx", iconWidth/2)
+                .attr("cy", iconWidth/2)
+                .attr("r", 0)
+            		.on("mouseover", mouseover)
+              .transition()
+              .delay((d) => { return 10 * d.position.y; })
+              	.duration(333)
+                .attr("r", iconWidth/2);
+				}
+
+       var arrayScale = d3_iconarray.scale()
+          .domain([0, rows])
+          .range([0, height])
+          .gapSize(gapSize)
+          .gapInterval(gapInterval);
+
+       function chooseData(file, gameName) {
+         d3.csv(file, map_row, plotPoints);
+         updateGameName(gameName)
+       }
+
+
+       d3.csv('PD_quads.csv', map_row, plotPoints);
+
+       function plotPoints(data) {
+         // clear old points out first
+         svg.selectAll("g").remove();
+         // create new grid
+         var grid = layout(data[T]["data"]);
+         DATA = data;
+				 // plot points
+         svg.selectAll("g").data(grid)
+          .enter().append("g")
+            .attr("class", (d) => { return "icon " + d.data.class; })
+            .attr("transform", (d) => {
+              return "translate(" +
+                arrayScale(d.position.x) + "," +
+                arrayScale(d.position.y) + ")";
+            })
+            .call(appendCircles);
+         updateGUI();
+       }
+
+       function next() {
+         T += 1;
+         redraw(T);
+         updateGUI();
+       }
+
+       function prev() {
+         T -= 1;
+         redraw(T);
+         updateGUI();
+       }
+
+       function updateGameName(name) {
+         d3.select("#game").text(name)
+       }
+
+       function updateGUI() {
+         updateButtons();
+         updateGeneration();
+         updateCounts();
+       }
+
+       function updateGeneration() {
+         d3.select("#gen").text(T)
+       }
+
+       function updateCounts() {
+         var ac = d3.selectAll("g.AC").data().length;
+         var ad = d3.selectAll("g.AD").data().length;
+         var tft = d3.selectAll("g.TfT").data().length;
+         var ntft = d3.selectAll("g.NTfT").data().length;
+         d3.select("#count-AC").text(ac);
+         d3.select("#count-AD").text(ad);
+         d3.select("#count-TfT").text(tft);
+         d3.select("#count-NTfT").text(ntft);
+       }
+
+       function updateButtons() {
+         if (T === 0) {
+           d3.select("#btn-prev").attr("disabled", true);
+         }
+         else {
+           d3.select("#btn-prev").attr("disabled", null);
+         }
+
+         if (T === DATA.length-1) {
+           d3.select("#btn-next").attr("disabled", true);
+         }
+         else {
+           d3.select("#btn-next").attr("disabled", null);
+         }
+
+       }
+
+       var redraw = function(t) {
+         var grid = layout(DATA[t]["data"]);
+         svg.selectAll(".icon")
+           .data(grid)
+            .attr("class", (d) => { return "icon " + d.data.class; })
+       }
+
+       var mouseover = function(d) {
+//          console.log(d.position);
+       }
+		 </script>
+	</body>
+</html>
