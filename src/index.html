@@ -90,12 +90,12 @@
         <div class="hidden-legend" id="bots-legend">
           <div >
             <div class="circle H_AC"></div>
-            <span>Always Cooperate (H)</span>
+            <span>Always Shop (H)</span>
             <span class="count" id="count-H_AC"></span>
           </div>
           <div>
             <div class="circle H_AD"></div>
-            <span>Always Defect (H)</span>
+            <span>Always Fish (H)</span>
             <span class="count" id="count-H_AD"></span>
           </div>
           <div>
@@ -110,12 +110,12 @@
           </div>
           <div >
             <div class="circle W_AC"></div>
-            <span>Always Cooperate (W)</span>
+            <span>Always Shop (W)</span>
             <span class="count" id="count-W_AC"></span>
           </div>
           <div>
             <div class="circle W_AD"></div>
-            <span>Always Defect (W)</span>
+            <span>Always Fish (W)</span>
             <span class="count" id="count-W_AD"></span>
           </div>
           <div>
@@ -124,7 +124,7 @@
             <span class="count" id="count-W_TfT"></span>
           </div>
           <div>
-            <div class="circle W_NTfT"></div>
+            <div class="circle NTfT"></div>
             <span>Not Tit-for-Tat (W)</span>
             <span class="count" id="count-W_NTfT"></span>
           </div>
@@ -145,17 +145,18 @@
           <span class="caret"></span></button>
           <ul class="dropdown-menu">
             <li><a onclick="chooseData('PD_quads.csv', 'Prisoner\'s Dillema')">Quadrants (PD)</a></li>
-            <li><a onclick="chooseData('SH_quads.csv', 'Stag Hunt')">Cooperation (SH)</a></li>
+            <li><a onclick="chooseData('SH_quads.csv', 'Stag Hunt')">Stag Hunt (SH)</a></li>
             <li><a onclick="chooseData('PD_rand.csv', 'Prisoner\'s Dillema')">Random (PD)</a></li>
             <li><a onclick="chooseData('PD_inv_AC.csv', 'Prisoner\'s Dillema')">Invasion - AC (PD)</a></li>
-            <li><a onclick="chooseData('PD_inv_AD.csv', 'Prisoner\'s Dillema')">Invasion - AD (PD)</a></li>
-            <li><a onclick="chooseData('PD_inv_TfT.csv', 'Prisoner\'s Dillema')">Invasion - TfT (PD)</a></li>
-            <li><a onclick="chooseData('SH_inv_AD.csv', 'Stag Hunt')">Cooperation Invasion (SH)</a></li>
+            <li><a onclick="chooseData('SH_inv_NTfT.csv', 'Stag Hunt')">Stag Invasion (SH)</a></li>
             <li><a onclick="chooseData('BOTS_tri.csv', 'Battle of the Sexes')">Triangles (BOTS)</a></li>
             <li><a onclick="chooseData('BOTS_rand.csv', 'Battle of the Sexes')">Random (BOTS)</a></li>
             <li><a onclick="chooseData('BOTS_alt.csv', 'Battle of the Sexes')">Fishing (BOTS)</a></li>
-            <li><a onclick="chooseData('BOTS_alt3.csv', 'Battle of the Sexes')">Nash Equilibrium (BOTS)</a></li>
+            <li><a onclick="chooseData('BOTS2_alt.csv', 'Battle of the Sexes')">Cooperation (BOTS)</a></li>
+            <li><a onclick="chooseData('BOTS2_alt_g.csv', 'Battle of the Sexes')">Cooperation - High Gamma (BOTS)</a></li>
+            <li><a onclick="chooseData('BOTS2_alt_4.csv', 'Battle of the Sexes')">Wife's Tit-for-Tat (BOTS)</a></li>
           </ul>
+
       </div>
       </div>
     </div>

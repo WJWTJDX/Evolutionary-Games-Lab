@@ -4,7 +4,7 @@ import random
 from src.games import Games
 
 EXTENSION = '.csv'
-DATA_DIR = '../data/'
+DATA_DIR = '../data2/'
 
 
 class Imitator:
@@ -111,7 +111,7 @@ class Imitator:
         if pattern == "quads":
             result = self.quad_pattern()
         elif pattern == "inv":
-            result = self.invasion_pattern("AC")
+            result = self.invasion_pattern("NTfT")
         elif pattern == "tri":
             result = self.triangles_pattern()
         elif pattern == "alt":
