@@ -1,21 +1,5 @@
-import random
 from sys import exit
 from numpy import matrix
-from numpy import array
-from numpy import arange
-import matplotlib.pyplot as plt
-
-STRATEGIES = ["AC", "AD", "TfT", "NTfT"]
-
-
-# A basic agent has a strategy
-class Agent:
-
-    def __init__(self, initial_strategy):
-        self.strategy = initial_strategy
-        # score for most recent round
-        self.score = 0
-        # for battle of sexes: gender-strategy
 
 
 class PrisonersDilemma:
@@ -24,6 +8,7 @@ class PrisonersDilemma:
     T = 5
     S = 1
     P = 2
+    STRATEGIES = ["AC", "AD", "TfT", "NTfT"]
 
     def __init__(self, gamma):
         self.abbreviation = "PD"
@@ -50,6 +35,7 @@ class StagHunt:
     T = 3
     S = 1
     P = 3
+    STRATEGIES = ["AC", "AD", "TfT", "NTfT"]
 
     def __init__(self, gamma):
         self.abbreviation = "SH"
@@ -79,6 +65,7 @@ class BattleOfTheSexes:
     T = 5
     S = 1
     P = 2
+    STRATEGIES = ["H_AC", "H_AD", "H_TfT", "H_NTfT", "WAC", "WAD", "WTfT", "WNTfT"]
 
     def __init__(self, gamma):
         self.abbreviation = "BOTS"
